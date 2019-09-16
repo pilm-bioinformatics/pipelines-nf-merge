@@ -11,7 +11,7 @@ Channel
       .into{reads_ch; print_ch}
 
 process merge {
-    publishDir "${params.outdir}"
+    publishDir "${params.outdir}", mode: 'copy'
 
     input:
     set file(reads), val(sample_id) from reads_ch
@@ -24,6 +24,7 @@ process merge {
     if (reads[1].getExtension() ==~ /gz/ ){
         cat = "zcat"
     } 
-       
-    "$cat $reads | gzip > ${sample_id}.fastq.gz"
+    """
+    $cat $reads | gzip > ${sample_id}.fastq.gz
+    """   
 }
